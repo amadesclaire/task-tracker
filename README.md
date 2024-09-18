@@ -2,8 +2,6 @@
 
 Task Tracker is a command-line tool (CLI) to manage your daily tasks. You can add, update, delete, and list tasks, and mark them as "in progress" or "done". Task Tracker stores your tasks in a local `tasks.json` file.
 
-This was made as a part of the https://roadmap.sh/ project list
-
 ## Features
 
 - Add a task with a description.
@@ -92,3 +90,5 @@ This was made as a part of the https://roadmap.sh/ project list
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+Built for https://roadmap.sh/projects/task-tracker
