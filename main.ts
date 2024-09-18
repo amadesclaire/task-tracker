@@ -70,30 +70,12 @@ const handlers = {
     );
   },
 
-  listDone: async () => {
+  listByStatus: async (status: "done" | "in-progress" | "todo") => {
     const tasks = await readTasks();
     tasks
-      .filter((task) => task.status === "done")
+      .filter((task) => task.status === status)
       .forEach((task, index) =>
-        console.log(`${index}: ${task.description} [done]`)
-      );
-  },
-
-  listInProgress: async () => {
-    const tasks = await readTasks();
-    tasks
-      .filter((task) => task.status === "in-progress")
-      .forEach((task, index) =>
-        console.log(`${index}: ${task.description} [in progress]`)
-      );
-  },
-
-  listTodo: async () => {
-    const tasks = await readTasks();
-    tasks
-      .filter((task) => task.status === "todo")
-      .forEach((task, index) =>
-        console.log(`${index}: ${task.description} [todo]`)
+        console.log(`${index}: ${task.description} [${task.status}]`)
       );
   },
 
@@ -114,16 +96,6 @@ const handlers = {
       tasks[index].status = "done";
       await writeTasks(tasks);
       console.log(`Task marked as done: "${tasks[index].description}"`);
-    } else {
-      console.error("Invalid task index");
-    }
-  },
-  markUndone: async (index: number) => {
-    const tasks = await readTasks();
-    if (index >= 0 && index < tasks.length) {
-      tasks[index].status = "todo";
-      await writeTasks(tasks);
-      console.log(`Task marked as not done: "${tasks[index].description}"`);
     } else {
       console.error("Invalid task index");
     }
@@ -163,15 +135,21 @@ async function main() {
     .with("update", () =>
       handlers.update(parseInt(values[0]), values.slice(1).join(" "))
     )
-    .with("list", () => handlers.listAll())
-    .with("list-done", () => handlers.listDone())
-    .with("list-in-progress", () => handlers.listInProgress())
-    .with("list-todo", () => handlers.listTodo())
+    .with("list", () => {
+      if (values[0] === "done") {
+        handlers.listByStatus("done");
+      } else if (values[0] === "in-progress") {
+        handlers.listByStatus("in-progress");
+      } else if (values[0] === "todo") {
+        handlers.listByStatus("todo");
+      } else {
+        handlers.listAll();
+      }
+    })
     .with("mark-in-progress", () =>
       handlers.markInProgress(parseInt(values[0]))
     )
     .with("mark-done", () => handlers.markAsDone(parseInt(values[0])))
-    .with("mark-todo", () => handlers.markUndone(parseInt(values[0])))
     .otherwise(() => {
       console.error(`Unknown command: ${command}`);
       Deno.exit(1);
