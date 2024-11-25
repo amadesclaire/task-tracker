@@ -117,7 +117,7 @@ const handlers = {
   },
 };
 
-async function main() {
+function main() {
   const args = Deno.args;
 
   if (args.length < 1) {
